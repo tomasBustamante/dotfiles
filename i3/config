@@ -4,35 +4,61 @@
 set $mod Mod4
 
 # Window borders
-for_window [class=".*"] border pixel 4
+for_window [class=".*"] border pixel 2
+
+# Window gaps
+gaps inner 4
+gaps outer 2
 
 # Default font
 font pango:DejaVu Sans Mono 8
 # font pango:Awesome 8
 
+# The combination of xss-lock, nm-applet and pactl is a popular choice, so
+# they are included here as an example. Modify as you see fit.
+
+# xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
+# screen before suspend. Use loginctl lock-session to lock your screen.
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+
+# NetworkManager is the most popular way to manage wireless networks on Linux,
+# and nm-applet is a desktop environment-independent system tray GUI for it.
+exec --no-startup-id nm-applet
+
+# Use pactl to adjust volume in PulseAudio.
+set $refresh_i3status killall -SIGUSR1 i3status
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
+bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
+
 # Focus, movement and resize direction keys
+# like vim:
 set $up k
 set $down j
 set $left h
 set $right l
 
-# use Mouse+$mod to drag floating windows to their wanted position
+# Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
 # start a terminal
 bindsym $mod+Return exec terminator
 
-# start Chromium browser
-bindsym $mod+c exec chromium-browser
+# start Brave browser
+bindsym $mod+w exec brave-browser
 
 # kill focused window
 bindsym $mod+Shift+q kill
 
-# start dmenu (a program launcher)
-# bindsym $mod+d exec dmenu_run
-# j4-dmenu-desktop is the new version of i3-dmenu-desktop which only displays
-# applications shipping a .desktop file (smarter and faster than dmenu)
-bindsym $mod+d exec --no-startup-id j4-dmenu-desktop
+# Program launcher
+# rofi:
+bindsym $mod+d exec "rofi -modi drun,run -show drun -show-icons"
+bindsym $mod+Tab exec rofi -show window -show-icons
+# dmenu alternative:
+# bindsym $mod+d exec --no-startup-id dmenu_run
+# i3-dmenu-desktop alternative (only displays applications shipping a .desktop file):
+# bindcode $mod+40 exec --no-startup-id i3-dmenu-desktop
 
 # change focus
 bindsym $mod+$left focus left
@@ -69,7 +95,7 @@ bindsym $mod+f fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
 bindsym $mod+s layout stacking
-bindsym $mod+w layout tabbed
+bindsym $mod+c layout tabbed
 bindsym $mod+e layout toggle split
 
 # toggle tiling / floating
@@ -82,7 +108,7 @@ bindsym $mod+space focus mode_toggle
 bindsym $mod+a focus parent
 
 # focus the child container
-bindsym $mod+z focus child
+#bindsym $mod+d focus child
 
 # move the currently focused window to the scratchpad
 bindsym $mod+Shift+minus move scratchpad
@@ -93,51 +119,54 @@ bindsym $mod+minus scratchpad show
 
 # Workspaces names
 # email client
-set $workspace1 "1: ✉️"
+set $ws1 "1: ✉️"
 # instant messaging
-set $workspace2 "2: 💬"
-# web browser 
-set $workspace3 "3: 🌐"
+set $ws2 "2: 💬"
+# web browser
+set $ws3 "3: 🌐"
 # terminal emulator
-set $workspace4 "4: "
+set $ws4 "4: term"
 # code editor
-set $workspace5 "5: "
-# More code
-set $workspace6 "6: "
+set $ws5 "5: code"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10"
 
 # switch to workspace
-bindsym $mod+1 workspace $workspace1
-bindsym $mod+2 workspace $workspace2
-bindsym $mod+3 workspace $workspace3
-bindsym $mod+4 workspace $workspace4
-bindsym $mod+5 workspace $workspace5
-bindsym $mod+6 workspace $workspace6
-bindsym $mod+7 workspace 7
-bindsym $mod+8 workspace 8
-bindsym $mod+9 workspace 9
-bindsym $mod+0 workspace 10
+bindsym $mod+1 workspace number $ws1
+bindsym $mod+2 workspace number $ws2
+bindsym $mod+3 workspace number $ws3
+bindsym $mod+4 workspace number $ws4
+bindsym $mod+5 workspace number $ws5
+bindsym $mod+6 workspace number $ws6
+bindsym $mod+7 workspace number $ws7
+bindsym $mod+8 workspace number $ws8
+bindsym $mod+9 workspace number $ws9
+bindsym $mod+0 workspace number $ws10
 
 # move focused container to workspace
-bindsym $mod+Shift+1 move container to workspace $workspace1
-bindsym $mod+Shift+2 move container to workspace $workspace2
-bindsym $mod+Shift+3 move container to workspace $workspace3
-bindsym $mod+Shift+4 move container to workspace $workspace4
-bindsym $mod+Shift+5 move container to workspace $workspace5
-bindsym $mod+Shift+6 move container to workspace $workspace6
-bindsym $mod+Shift+7 move container to workspace 7
-bindsym $mod+Shift+8 move container to workspace 8
-bindsym $mod+Shift+9 move container to workspace 9
-bindsym $mod+Shift+0 move container to workspace 10
+bindsym $mod+Shift+1 move container to workspace number $ws1
+bindsym $mod+Shift+2 move container to workspace number $ws2
+bindsym $mod+Shift+3 move container to workspace number $ws3
+bindsym $mod+Shift+4 move container to workspace number $ws4
+bindsym $mod+Shift+5 move container to workspace number $ws5
+bindsym $mod+Shift+6 move container to workspace number $ws6
+bindsym $mod+Shift+7 move container to workspace number $ws7
+bindsym $mod+Shift+8 move container to workspace number $ws8
+bindsym $mod+Shift+9 move container to workspace number $ws9
+bindsym $mod+Shift+0 move container to workspace number $ws10
 
 # move workspace to another monitor
-bindsym $mod+m move workspace to output left
+bindsym $mod+m move workspace to output lefth
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -158,53 +187,46 @@ mode "resize" {
     bindsym Up      resize shrink height 10 px or 10 ppt
     bindsym Right   resize grow width 10 px or 10 ppt
 
-    # back to normal: Enter or Escape
+    # back to normal: Enter or Escape or $mod+r
     bindsym Return mode "default"
     bindsym Escape mode "default"
+    bindsym $mod+r mode "default"
 }
 
 bindsym $mod+r mode "resize"
 
-# Bar config
-bar {
-   output $big-monitor
-   output $laptop
-   output DP-1
-   status_command    i3status
-   position top
-   workspace_buttons yes
-   colors {
-       background #020108
-   }
-   # tray_output primary
-   # Take a screenshot by right clicking on the bar
-   bindsym button3 exec --no-startup-id import /tmp/latest-screenshot.png
-}
+# Start i3bar to display a workspace bar (commented out to use polybar instead)
+# bar {
+#     status_command i3status
+#     position top
+#     workspace_buttons yes
+#     colors {
+#         background #020108
+#     }
+#     # tray_output primary
+#     # Take a screenshot by right clicking on the bar
+#     bindsym button3 exec --no-startup-id import /tmp/latest-screenshot.png
+# }
 
 # Startup applications
-exec --no-startup-id nitrogen --restore
-exec --no-startup-id volumeicon
-# exec --no-startup-id synergy
-exec mailspring
-assign [class="Mailspring"] $workspace1
-exec slack
-assign [class="Slack"] $workspace2
-# exec --no-startup-id $HOME/.config/polybar/launch.sh
+exec_always --no-startup-id ~/.config/polybar/launch.sh
+exec --no-startup-id picom -b
+exec --no-startup-id nitrogen --set-auto ~/Pictures/galaxy-wallpaper.jpg --head=0 && nitrogen --set-auto ~/Pictures/galaxy-wallpaper.jpg --head=1
+# exec slack
+# assign [class="Slack"] $ws2
 
 # Assignment of workspaces to specific screens (when using more than one monitor)
 set $big-monitor HDMI-1
 set $laptop eDP-1
-workspace $workspace1 output $big-monitor
-workspace $workspace2 output $laptop
-workspace $workspace3 output $laptop
-workspace $workspace4 output $laptop
+# workspace $ws1 output $big-monitor
+# workspace $ws2 output $laptop
+# workspace $ws3 output $laptop
+# workspace $ws4 output $laptop
 
 # Floating windows
 for_window [class="^Skype$"] floating enable
 for_window [window_role="^gimp-toolbox-color-dialog$"] floating enable
-for_window [class="Xfce4-appfinder"] floating enable
-for_window [class="Xfce4-settings-manager"] floating enable
-for_window [class="Gnome-calculator"] floating enable
 
 # Popups during fullscreen mode
 popup_during_fullscreen smart
+
