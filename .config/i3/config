@@ -3,6 +3,9 @@
 # Modifier key assignment ($mod for Alt, Mod4 for Windows key)
 set $mod Mod4
 
+# Default terminal emulator
+set $terminal terminator
+
 # Window borders
 for_window [class=".*"] border pixel 2
 
@@ -13,6 +16,13 @@ gaps outer 2
 # Default font
 font pango:DejaVu Sans Mono 8
 # font pango:Awesome 8
+
+exec --no-startup-id terminal --name dropdown &
+
+bindsym $mod+i [instance="dropdown"] scratchpad show, move position center
+
+for_window [instance="dropdown"] floating enable, resize set 800 600, \
+    move scratchpad
 
 # The combination of xss-lock, nm-applet and pactl is a popular choice, so
 # they are included here as an example. Modify as you see fit.
@@ -43,7 +53,7 @@ set $right l
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec terminator
+bindsym $mod+Return exec terminal
 
 # start Brave browser
 bindsym $mod+w exec brave-browser
