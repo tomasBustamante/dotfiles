@@ -13,13 +13,15 @@ for_window [class=".*"] border pixel 2
 gaps inner 4
 gaps outer 2
 
+# thin borders
+hide_edge_borders both
+
 # Default font
 font pango:DejaVu Sans Mono 8
 # font pango:Awesome 8
 
-exec --no-startup-id terminal --name dropdown &
-
-bindsym $mod+i [instance="dropdown"] scratchpad show, move position center
+bindsym $mod+i [instance="dropdown"] exec --no-startup-id $terminal --name  dropdown & \
+    scratchpad show, move position center
 
 for_window [instance="dropdown"] floating enable, resize set 800 600, \
     move scratchpad
@@ -53,7 +55,7 @@ set $right l
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec terminal
+bindsym $mod+Return exec $terminal
 
 # start Brave browser
 bindsym $mod+w exec brave-browser
@@ -206,22 +208,25 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 # Start i3bar to display a workspace bar (commented out to use polybar instead)
-# bar {
-#     status_command i3status
-#     position top
-#     workspace_buttons yes
-#     colors {
-#         background #020108
-#     }
-#     # tray_output primary
-#     # Take a screenshot by right clicking on the bar
-#     bindsym button3 exec --no-startup-id import /tmp/latest-screenshot.png
-# }
+bar {
+    status_command i3status
+    position top
+    workspace_buttons yes
+    colors {
+        background #020108
+    }
+    tray_output primary
+    # Take a screenshot by right clicking on the bar
+    bindsym button3 exec --no-startup-id import /tmp/latest-screenshot.png
+}
 
 # Startup applications
-exec_always --no-startup-id ~/.config/polybar/launch.sh
+# exec_always --no-startup-id ~/.config/polybar/launch.sh
+exec --no-startup-id xrandr --output DVI-I-1 --rotate normal
+exec --no-startup-id xrandr --output DVI-D-1 --rotate normal
+exec --no-startup-id xrandr --output HDMI-1 --rotate normal
 exec --no-startup-id picom -b
-exec --no-startup-id nitrogen --set-auto ~/Pictures/galaxy-wallpaper.jpg --head=0 && nitrogen --set-auto ~/Pictures/galaxy-wallpaper.jpg --head=1
+exec --no-startup-id nitrogen --set-auto ~/Pictures/galaxy-wallpaper.jpg --head=0 && nitrogen --set-auto ~/Pictures/galaxy-wallpaper.jpg --head=1 && nitrogen --set-auto ~/Pictures/galaxy-wallpaper.jpg --head=2
 # exec slack
 # assign [class="Slack"] $ws2
 
@@ -235,6 +240,7 @@ set $laptop eDP-1
 
 # Floating windows
 for_window [class="^Skype$"] floating enable
+for_window [class="Yad"] floating enable
 for_window [window_role="^gimp-toolbox-color-dialog$"] floating enable
 
 # Popups during fullscreen mode
